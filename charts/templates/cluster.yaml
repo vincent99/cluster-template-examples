@@ -1,0 +1,94 @@
+apiVersion: provisioning.cattle.io/v1
+kind: Cluster
+metadata:
+  {{- if .Values.cluster.labels }}
+  labels:
+{{ toYaml .Values.cluster.labels | indent 4 }}
+  {{- end }}
+  {{- if .Values.cluster.annotations }}
+  annotations:
+{{ toYaml .Values.cluster.annotations | indent 4 }}
+  {{- end }} 
+  name: {{ .Values.cluster.name }}
+spec:
+  cloudCredentialSecretName: {{ .Values.cloudCredentialSecretName }}
+  enableNetworkPolicy: {{ .Values.enableNetworkPolicy }}
+  kubernetesVersion: {{ .Values.kubernetesVersion }}
+  {{- if .Values.rancherValues }}
+  rancherValues:
+{{ toYaml .Values.rancherValues | indent 4 }}
+  {{- end }}
+  rkeConfig:
+    nodePools: 
+    {{- $root := . -}}
+    {{- if .Values.nodepools }} {{ range $index, $nodepool := .Values.nodepools }}
+    - controlPlaneRole: {{ $nodepool.controlplane }}
+      etcdRole: {{ $nodepool.etcd }}
+      workerRole: {{ $nodepool.worker }}
+      quantity: {{ $nodepool.quantity }}
+      name: {{ $nodepool.name }}
+      nodeConfigRef:
+        {{- if eq $root.Values.cloudprovider "amazonec2" }}
+        kind: Amazonec2Config
+        {{- else if eq $root.Values.cloudprovider "vsphere" }}
+        kind: VmwarevsphereConfig
+        {{- else if eq $root.Values.cloudprovider "digitalocean" }}
+        kind: DigitaloceanConfig
+        {{- else if eq $root.Values.cloudprovider "azure" }}
+        kind: AzureConfig
+        {{- end}}
+        name: {{ $nodepool.name }}
+    {{- end }}
+    {{- end }}
+    {{- if .Values.rke.chartValues }}
+    chartValues:
+{{ toYaml .Values.rke.chartValues | indent 6 }}
+    {{- end }}
+    {{- if .Values.rke.controlPlaneConfig }}
+    controlPlaneConfig:
+{{ toYaml .Values.rke.controlPlaneConfig | indent 6 }}
+    {{- end }}
+    {{- if .Values.rke.workerConfig }}
+    workerConfig: {{ range $index, $worker := .Values.rke.workerConfig }}
+    - machineLabelSelector:
+{{ toYaml $worker.machineLabelSelector | indent 8 }}
+      {{- if $worker.config }}
+      config:
+{{ toYaml $worker.config | indent 8 }}
+      {{- end }}      
+    {{- end }}
+    {{- end }}
+    {{- if .Values.rke.localClusterAuthEndpoint.enabled }} 
+    localClusterAuthEndpoint:
+      enabled: {{ .Values.rke.localClusterAuthEndpoint.enabled }}
+      fqdn: {{ .Values.rke.localClusterAuthEndpoint.fqdn }}
+      caCerts: {{ .Values.rke.localClusterAuthEndpoint.caCerts }}
+    {{- end }}
+    upgradeStrategy:
+      {{- if .Values.rke.upgradeStrategy.controlPlaneDrainOptions.enabled }}
+      controlPlaneDrainOptions:
+        deleteEmptyDirData: {{ .Values.rke.upgradeStrategy.controlPlaneDrainOptions.deleteEmptyDirData }}
+        disableEviction: {{ .Values.rke.upgradeStrategy.controlPlaneDrainOptions.disableEviction }}
+        enabled: {{ .Values.rke.upgradeStrategy.controlPlaneDrainOptions.enabled }}
+        force: {{ .Values.rke.upgradeStrategy.controlPlaneDrainOptions.force }}
+        gracePeriod: {{ .Values.rke.upgradeStrategy.controlPlaneDrainOptions.gracePeriod }}
+        ignoreErrors: {{ .Values.rke.upgradeStrategy.controlPlaneDrainOptions.ignoreErrors }}
+        skipWaitForDeleteTimeoutSeconds: {{ .Values.rke.upgradeStrategy.controlPlaneDrainOptions.skipWaitForDeleteTimeoutSeconds }}
+        timeout: {{ .Values.rke.upgradeStrategy.controlPlaneDrainOptions.timeout }}
+        {{- end }}
+      workerConcurrency: {{ .Values.rke.upgradeStrategy.workerConcurrency | quote }}
+      {{- if .Values.rke.upgradeStrategy.controlPlaneDrainOptions.enabled }}
+      workerDrainOptions:
+        deleteEmptyDirData: {{ .Values.rke.upgradeStrategy.workerDrainOptions.deleteEmptyDirData }}
+        disableEviction: {{ .Values.rke.upgradeStrategy.workerDrainOptions.disableEviction }}
+        enabled: {{ .Values.rke.upgradeStrategy.workerDrainOptions.enabled }}
+        force: {{ .Values.rke.upgradeStrategy.workerDrainOptions.force }}
+        gracePeriod: {{ .Values.rke.upgradeStrategy.workerDrainOptions.gracePeriod }}
+        ignoreErrors: {{ .Values.rke.upgradeStrategy.workerDrainOptions.ignoreErrors }}
+        skipWaitForDeleteTimeoutSeconds: {{ .Values.rke.upgradeStrategy.workerDrainOptions.skipWaitForDeleteTimeoutSeconds }}
+        timeout: {{ .Values.rke.upgradeStrategy.workerDrainOptions.timeout }}
+      {{- end }}
+{{- if .Values.agentEnvs }}
+  agentEnvs:
+{{ toYaml .Values.agentEnvs | indent 4 }}
+{{- end }}
