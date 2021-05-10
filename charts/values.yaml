@@ -131,265 +131,121 @@ rke:
       # ignoreErrors: false
       # skipWaitForDeleteTimeoutSeconds: 0
       # timeout: 0
-    workerConcurrency: "1"
+    workerConcurrency: "10%"
+    controlPlaneConcurrency: "10%"
+
+  # specify CloudCredentialName for etcd snapshot
+  # etcdSnapshotCloudCredentialName: ""
+
+  # specify additional manifest that needs to be applied into cluster
+  # additionalManifest: ""
+
+  # specify private registry of rke2 cluster
+  # registries: 
+  #   mirrors: {}
+  #   configs: {}
+
+  # creating etcd snapshot
+  # etcdSnapshotCreate:
+  #  name: ""
+  #  nodeName: ""
+  #  s3:
+  #    endpoint: ""
+  #    endpointCA: ""
+  #    skipSSLVerify: false
+  #    bucket: ""
+  #    region: ""
+  #    cloudCredentialName: ""
+  #    folder: ""
+  # restoring etcd snapshot
+  # etcdSnapshotRestore:
+  #  name: ""
+  #  nodeName: ""
+  #  size: ""
+  #  s3:
+  #    endpoint: ""
+  #    endpointCA: ""
+  #    skipSSLVerify: false
+  #    bucket: ""
+  #    region: ""
+  #    cloudCredentialName: ""
+  #    folder: ""
+
+# specify default PodSecurityPolicyTemplateName
+# defaultPodSecurityPolicyTemplateName: ""
+
+# specify default ClusterRoleForProjectMembers
+# defaultClusterRoleForProjectMembers: ""
+
+# enable monitoring
+monitoring:
+  enabled: false
+  # whether to pause deployment
+  # paused: false
+  # specify which version to install, can be semver range. If version is empty or is semver range, it will pick up the latest version.
+  # version: ""
+  # specify install timeouts
+  # timeoutSeconds: 0
+  # specify cutsom values set
+  # values:
+  #   foo: bar
+  # Override immutable resources. This could be dangerous.
+  # force: false
+  # take ownership of existing resources
+  # takeOwnership: "false"
+  # set maximum helm release history
+  # maxHistory: 10
+  # set default namespace if resource doesn't have namespace specified
+  defaultNamespace: "cattle-monitoring-system"
+  diff:
+    comparePatches:
+    - apiVersion: admissionregistration.k8s.io/v1beta1
+      kind: MutatingWebhookConfiguration
+      name: rancher-monitoring-admission
+      jsonPointers:
+      - /webhooks/0/failurePolicy
+    - apiVersion: admissionregistration.k8s.io/v1beta1
+      kind: ValidatingWebhookConfiguration
+      name: rancher-monitoring-admission
+      jsonPointers:
+      - /webhooks/0/failurePolicy
+  # set target namespace for monitoring
+  # targetNamespace: "cattle-monitoring-system"
+  # set service account for helm install
+  # serviceAccount: ""
+
+# install charts after provisioning cluster
+# charts:
+# - # specify a chart name. This is for displaying purpose
+    # name: "my-chart" 
+    # whether to pause deployment
+    # paused: "false"
+    # specify the chart name in repository that you want to install
+    # chartName: "redis"
+    # specify the repo name. This will be the repo that is added through rancher app & marketplace
+    # repoName: "rancher-charts"
+    # specify helm release name
+    # releaseName: "my-release"
+    # specify which version to install, can be semver range. If version is empty or is semver range, it will pick up the latest version.
+    # version: ""
+    # specify install timeouts
+    # timeoutSeconds: 0
+    # specify cutsom values set
+    # values:
+    #   foo: bar
+    # specify diff options for bundles
+    # diff: {}
+    # Override immutable resources. This could be dangerous.
+    # force: false
+    # take ownership of existing resources
+    # takeOwnership: "false"
+    # set maximum helm release history
+    # maxHistory: 10
+    # set default namespace if resource doesn't have namespace specified
+    # defaultNamespace: "default"
+    # set target namespace for monitoring
+    # targetNamespace: "cattle-monitoring-system"
+    # set service account for helm install
+    # serviceAccount: ""
 
-# Specify nodepool options. Can add multiple node groups, specify etcd, controlplane and worker roles. Not needed if using custom driver.
-# nodepools:
-#
-#   ==== amazonec2 driver example ====
-#
-# - etcd: true
-#   controlplane: true
-#   worker: true
-#   specify node labels
-#   labels: {}
-#   specify node taints
-#   taints: {}
 
-#   specify nodepool size
-#   quantity: 1
-
-#   specify nodepool name
-#   name: ec2-nodepool-1
-
-#   AWS machine image
-#   ami: ""
-
-#   AWS spot instance duration in minutes (60, 120, 180, 240, 300, or 360)
-#   blockDurationMinutes: 0
-
-#   AWS root device name
-#   deviceName: "/dev/sda1"
-
-#   Encrypt the EBS volume using the AWS Managed CMK
-#   encryptEbsVolume: false
-  
-#   Optional endpoint URL (hostname only or fully qualified)
-#   endpoint: ""
-
-#   AWS IAM Instance Profile
-#   iamInstanceProfile: ""
-
-#   Disable SSL when sending requests
-#   insecureTransport: false
-
-#   AWS instance type
-#   instanceType: t3a.medium
-
-#   AWS region
-#   region: us-west-2
-
-#   Whether to create `rancher-node` security group. If false, can provide with existing security group
-#   createSecurityGroup: true
-#   createSecurityGroup: false
-#   securityGroups: []
-
-#   AWS keypair to use
-#   keypairName: ""
-
-#   Skip adding default rules to security groups
-#   securityGroupReadonly: false
-
-#   File contents for sshKeyContents
-#   sshKeyContents: ""
-
-#   AWS VPC subnet id
-#   subnetId: ""
-
-#   Set this flag to enable CloudWatch monitoring
-#   monitoring; false
-
-#   Make the specified port number accessible from the Internet
-#   openPort: ["8080", "8443"]
-
-#   Only use a private IP address
-#   privateAddressOnly: false
-
-#   Set this flag to request spot instance
-#   requestSpotInstance: false
-
-#   AWS Tags (e.g. key1,value1,key2,value2)
-#   tags: "foo,bar"
-
-#   Set retry count for recoverable failures (use -1 to disable)
-#   retries: 5
-
-#   AWS root disk size (in GB)
-#   rootSize: 16
-
-#   AWS spot instance bid price (in dollar)
-#   spotPrice: 0.5
-
-#   Set the name of the ssh user
-#   sshUser: ubuntu
-
-#   Amazon EBS volume type
-#   volumeType: gp2
-
-#   AWS VPC id
-#   vpcId: ""
-
-#   Create an EBS optimized instance
-#   useEbsOptimizedInstance: false
-
-#   Force the usage of private IP address
-#   usePrivateAddress: false
-
-#   File contents for userdata
-#   userdata: ""
-
-#   AWS zone for instance (i.e. a,b,c,d,e)
-#   zone: a
-#
-#   ==== vsphere driver example ====
-#
-# - etcd: true
-#   controlplane: true
-#   worker: true
-
-#   specify node labels
-#   labels: {}
-
-#   specify node taints
-#   taints: {}
-
-#   specify nodepool size
-#   quantity: 1
-
-#   specify nodepool name
-#   name: vsphere-nodepool-1
-
-#   vSphere vm configuration parameters (used for guestinfo)
-#   cfgparam: []
-
-#   If you choose creation type clone a name of what you want to clone is required
-#   cloneFrom: ""
-
-#   Filepath to a cloud-config yaml file to put into the ISO user-data
-#   cloudConfig: ""
-
-#   vSphere cloud-init filepath or url to add to guestinfo, filepath will be read and base64 encoded before adding
-#   cloudinit: ""
-
-#   If you choose to clone from a content library template specify the name of the library
-#   contentLibrary: ""
-
-#   vSphere CPU number for docker VM
-#   cpuCount: "2"
-
-#   'Creation type when creating a new virtual machine. Supported values: vm, template, library, legacy'
-#   creationType: "vm"
-
-#   vSphere custom attribute, format key/value e.g. '200=mycustom value'
-#   customAttribute: ["200=mycustom value"]
-
-#   vSphere datacenter for virtual machine
-#   datacenter: ""
-
-#   vSphere datastore for virtual machine
-#   datastore: ""
-
-#   vSphere datastore cluster for virtual machine
-#   datastoreCluster: ""
-
-#   vSphere size of disk for docker VM (in MB)
-#   diskSize: "20480"
-
-#   vSphere folder for the docker VM. This folder must already exist in the datacenter
-#   folder: ""
-
-#   vSphere compute resource where the docker VM will be instantiated. This can be omitted if using a cluster with DRS
-#   hostsystem: ""
-
-#   vSphere size of memory for docker VM (in MB)
-#   memorySize: "2048"
-
-#   vSphere network where the virtual machine will be attached
-#   network: ""
-
-#   vSphere resource pool for docker VM
-#   pool: ""
-
-#   If using a non-B2D image you can specify the ssh port
-#   sshPort: "22"
-
-#   If using a non-B2D image the uploaded keys will need chown'ed, defaults to staff e.g. docker:staff
-#   sshUserGroup: staff
-
-#   vSphere tag id e.g. urn:xxx
-#   tag: ["urn:xxx"]
-
-#   'vSphere vApp IP allocation policy. Supported values are: dhcp, fixed, transient and fixedAllocated'
-#   vappIpallocationpolicy: ""
-
-#   'vSphere vApp IP protocol for this deployment. Supported values are: IPv4 and IPv6'
-#   vappIpprotocol: ""
-
-#   vSphere vApp properties
-#   vappProperty: []
-
-#   'vSphere OVF environment transports to use for properties. Supported values are: iso and com.vmware.guestInfo'
-#   vappTransport: ""
-
-#   vSphere IP/hostname for vCenter
-#   vcenter: ""
-
-#   vSphere Port for vCenter
-#   vcenterPort: 443
-#
-#   ==== Digitalocean driver example ====
-#
-# - etcd: true
-#   controlplane: true
-#   worker: true
-
-#   specify node labels
-#   labels: {}
-
-#   specify node taints
-#   taints: {}
-
-#   specify nodepool size
-#   quantity: 1
-
-#   # specify nodepool name
-#   name: digitalocean-nodepool-1
-
-#   enable backups for droplet
-#   backups: true
-
-#   Digital Ocean Image
-#   image: ubuntu-16-04-x64
-
-#   enable ipv6 for droplet
-#   ipv6: false
-
-#   enable monitoring for droplet
-#   monitoring: false
-
-#   enable private networking for droplet
-#   privateNetworking: false
-
-#   Digital Ocean region
-#   region: nyc3
-
-#   Digital Ocean size
-#   size: s-1vcpu-1gb
-
-#   File contents for sshKeyContents
-#   sshKeyContents: ""
-
-#   SSH key fingerprint
-#   sshKeyFingerprint: ""
-
-#   SSH port
-#   sshPort: 22
-
-#   SSH username
-#   sshUser: root
-
-#   comma-separated list of tags to apply to the Droplet
-#   tags: ""
-
-#   File contents for userdata
-#   userdata: "" 

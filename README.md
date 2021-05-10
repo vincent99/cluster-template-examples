@@ -4,8 +4,6 @@ This project contains rke2 cluster template helm chart, which can be applied wit
 
 ### How to use
 
-It is a standard helm chart which creates CR `clusters.provisioning.cattle.io` and nodeconfigs.
-
 The general cluster configuration options are available through [values.yaml](./charts/values.yaml).
 
 ```yaml
@@ -158,6 +156,8 @@ For different cloud provider options on nodepools, checkout
 [DigitalOcean](./charts/values-do.yaml)
 
 [Vsphere](./charts/values-vsphere.yaml)
+
+[Azure](./charts/values-azure.yaml)
 
 ### Version control
 
