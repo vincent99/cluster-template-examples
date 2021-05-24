@@ -1,6 +1,6 @@
 {{- if .Values.monitoring.enabled }}
 apiVersion: management.cattle.io/v3
-kind: MultiClusterChart
+kind: ManagedChart
 metadata:
   name: monitoring-crd
 spec:
@@ -15,10 +15,6 @@ spec:
   values: 
 {{ toYaml .Values.monitoring.values | indent 4 }}
   {{- end }}
-  {{- if .Values.monitoring.diff }}
-  diff:
-{{ toYaml .Values.monitoring.diff | indent 4 }}
-  {{- end }}
   force: {{ .Values.monitoring.force }}
   maxHistory: {{ .Values.monitoring.maxHistory }}
   defaultNamespace: {{ .Values.monitoring.defaultNamespace }}
@@ -28,7 +24,7 @@ spec:
   - clusterName: {{ .Values.cluster.name }}
 ---
 apiVersion: management.cattle.io/v3
-kind: MultiClusterChart
+kind: ManagedChart
 metadata:
   name: monitoring
 spec:
@@ -59,7 +55,7 @@ spec:
 
 {{ range $index, $chart := .Values.charts }}
 apiVersion: management.cattle.io/v3
-kind: MultiClusterChart
+kind: ManagedChart
 metadata:
   name: {{ $chart.name }}
   namespace: {{ $chart.namespace }}
