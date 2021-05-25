@@ -35,72 +35,10 @@ rke:
 # enable monitoring
 monitoring:
   enabled: false
-  # whether to pause deployment
-  # paused: false
   # specify which version to install, can be semver range. If version is empty or is semver range, it will pick up the latest version.
   # version: ""
-  # specify install timeouts
-  # timeoutSeconds: 0
   # specify cutsom values set
   # values:
   #   foo: bar
-  # Override immutable resources. This could be dangerous.
-  # force: false
-  # take ownership of existing resources
-  # takeOwnership: "false"
-  # set maximum helm release history
-  # maxHistory: 10
-  # set default namespace if resource doesn't have namespace specified
-  defaultNamespace: "cattle-monitoring-system"
-  diff:
-    comparePatches:
-    - apiVersion: admissionregistration.k8s.io/v1beta1
-      kind: MutatingWebhookConfiguration
-      name: rancher-monitoring-admission
-      jsonPointers:
-      - /webhooks/0/failurePolicy
-    - apiVersion: admissionregistration.k8s.io/v1beta1
-      kind: ValidatingWebhookConfiguration
-      name: rancher-monitoring-admission
-      jsonPointers:
-      - /webhooks/0/failurePolicy
-  # set target namespace for monitoring
-  # targetNamespace: "cattle-monitoring-system"
-  # set service account for helm install
-  # serviceAccount: ""
-
-# install charts after provisioning cluster
-# charts:
-# - # specify a chart name. This is for displaying purpose
-    # name: "my-chart" 
-    # whether to pause deployment
-    # paused: "false"
-    # specify the chart name in repository that you want to install
-    # chartName: "redis"
-    # specify the repo name. This will be the repo that is added through rancher app & marketplace
-    # repoName: "rancher-charts"
-    # specify helm release name
-    # releaseName: "my-release"
-    # specify which version to install, can be semver range. If version is empty or is semver range, it will pick up the latest version.
-    # version: ""
-    # specify install timeouts
-    # timeoutSeconds: 0
-    # specify cutsom values set
-    # values:
-    #   foo: bar
-    # specify diff options for bundles
-    # diff: {}
-    # Override immutable resources. This could be dangerous.
-    # force: false
-    # take ownership of existing resources
-    # takeOwnership: "false"
-    # set maximum helm release history
-    # maxHistory: 10
-    # set default namespace if resource doesn't have namespace specified
-    # defaultNamespace: "default"
-    # set target namespace for monitoring
-    # targetNamespace: "cattle-monitoring-system"
-    # set service account for helm install
-    # serviceAccount: ""
 
 
