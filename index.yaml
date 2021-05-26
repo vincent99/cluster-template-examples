@@ -2,11 +2,11 @@ apiVersion: v1
 entries:
   cluster-template:
   - apiVersion: v1
-    created: "2021-05-25T17:08:43.248177792-07:00"
+    created: "2021-05-26T11:07:41.192822954-07:00"
     description: Cluster template for rke2
-    digest: bf259eb3cee7e1753b5658efd1486e8c2e5e90b24349f290530e81c7d7e9210e
+    digest: 13e9d7cef9b67dcea4b3cacbfc8503318245eef3ab3dbdcb33cdcd9ca22ba5ec
     name: cluster-template
     urls:
     - cluster-template-0.0.1.tgz
     version: 0.0.1
-generated: "2021-05-25T17:08:43.247045006-07:00"
+generated: "2021-05-26T11:07:41.19187637-07:00"
