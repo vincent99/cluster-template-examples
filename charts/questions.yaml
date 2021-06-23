@@ -14,7 +14,7 @@ questions:
   group: "General"
 - variable: aaaTestConfigMap
   default: 
-  description: "CloudCredentialName for provisioning cluster"
+  description: "aaaConfigmapTest"
   label: "CloudCredential Name"
   type: reference[configmap]
   group: "General"
