@@ -6,6 +6,16 @@ questions:
   required: true
   type: string
   group: "General"
+- variable: clusterType
+  label: Cluster Type
+  description: Select the type of the cluster where vSphere CPI will be deployed
+  type: enum
+  default: "rke"
+  options:
+    - "rke"
+    - "rke2"
+    - "other"
+  group: Configuration
 - variable: cloudCredentialSecretName
   default: 
   description: "CloudCredentialName for provisioning cluster"
